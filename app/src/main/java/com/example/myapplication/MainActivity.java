@@ -3,10 +3,12 @@ package com.example.myapplication;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActionBar;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,12 +18,14 @@ import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
-
+import static android.icu.lang.UCharacter.DecompositionType.VERTICAL;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
@@ -32,9 +36,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button mGoButton;
     private SeekBar mSeekBar;
     private VideoView mVideoView;
-    private Button  minusvolume;
-    private Button  plusvolume;
-    private  TextView volume;
+    private Button minusvolume;
+    private Button plusvolume;
+    private TextView volume;
+    private TextView text;
     ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -46,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.e("sc", "连接失败");
         }
     };
+
     public void init() {
 //            findViewById()方法找到对应空间
 //            构造方法舒适化参数
@@ -55,9 +61,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mSeekBar = findViewById(R.id.SeekBar);
         mVideoView = findViewById(R.id.Video_view);
 //        设置音量初始化
-        plusvolume=findViewById(R.id.plus);
-        minusvolume=findViewById(R.id.minus);
-        volume=findViewById(R.id.volume);
+        plusvolume = findViewById(R.id.plus);
+        minusvolume = findViewById(R.id.minus);
+        volume = findViewById(R.id.volume);
 
 //        指定播放的视频
         String uri = "android.resource://" + getPackageName() + "/raw/" + R.raw.video;
@@ -129,19 +135,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //      点击出现对话框
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 //        获取最大音量和当前音量
-        int maxVolum =  audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        int minVolum= audioManager.getStreamMinVolume(AudioManager.STREAM_MUSIC);
+        int maxVolum = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        int minVolum = audioManager.getStreamMinVolume(AudioManager.STREAM_MUSIC);
         switch (view.getId()) {
             case R.id.Button: {
                 mTextView.setText("欢迎观看视频");
                 //开始播放
-                if(mVideoView.isPlaying())
-                {
+                if (mVideoView.isPlaying()) {
                     mVideoView.pause();
                     mButton.setText("▶");
-                }
-                else
-                {
+                } else {
                     mVideoView.start();
                     mButton.setText("||");
                 }
@@ -156,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             int progress = mVideoView.getCurrentPosition();
                             Message message = new Message();
                             message.arg1 = progress;
-                           myHandler.sendMessage(message);
+                            myHandler.sendMessage(message);
                         }
 
                         try {
@@ -168,25 +171,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }).start();
             }
             break;
-            case R.id.plus:
-            {
+            case R.id.plus: {
                 int currentVolum = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                if(currentVolum<=maxVolum) {
+                if (currentVolum <= maxVolum) {
                     audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, AudioManager.FX_FOCUS_NAVIGATION_UP);
                     volume.setText(String.valueOf(currentVolum));
                 }
             }
             break;
-            case R.id.minus:
-            {
+            case R.id.minus: {
                 int currentVolum = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                if(currentVolum>=minVolum) {
+                if (currentVolum >= minVolum) {
                     audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, AudioManager.FX_FOCUS_NAVIGATION_UP);
                     volume.setText(String.valueOf(currentVolum));
                 }
             }
             break;
-    } }
+        }
+    }
 
     private Handler myHandler = new Handler() {
         @Override
@@ -196,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mSeekBar.setProgress(msg.arg1);
         }
     };
+
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 
@@ -209,6 +212,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
+    }
+
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+        } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+        }
     }
 }
 
