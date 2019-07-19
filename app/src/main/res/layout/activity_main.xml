@@ -2,11 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="3"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@drawable/paperone">
 
     <TextView
         android:id="@+id/Text_View"
@@ -24,7 +26,9 @@
     <VideoView
         android:id="@+id/Video_view"
         android:layout_width="fill_parent"
-        android:layout_height="200dp" />
+        android:layout_height="200dp"
+        android:layout_margin="10dp"
+        />
 
     <SeekBar
         android:id="@+id/SeekBar"
@@ -35,7 +39,9 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="35dp"
+        >
         <Button
             android:id="@+id/Button"
             android:layout_width="wrap_content"
