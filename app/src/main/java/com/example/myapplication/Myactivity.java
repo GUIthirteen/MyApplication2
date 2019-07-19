@@ -14,7 +14,7 @@ public class Myactivity extends AppCompatActivity implements View.OnClickListene
 
 
     public void init() {
-        mButton = findViewById(R.id.BackButton);
+        //mButton = findViewById(R.id.BackButton);
         mButton.setOnClickListener(this);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(R.drawable.ic_launcher_background);
@@ -30,7 +30,7 @@ public class Myactivity extends AppCompatActivity implements View.OnClickListene
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.my_activity);
+        //setContentView(R.layout.my_activity);
         init();
     }
 
